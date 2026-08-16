@@ -41,24 +41,33 @@ pip install -r requirements.txt
 
 ### Running
 
-After that, you can proceed to start the program by running `main.py`.
+1. Open your terminal (PowerShell or Command Prompt).
+2. Change your directory to where the project is located:
+   ```bash
+   cd C:\Users\nshwe\Downloads\CAR
+   ```
+3. Run the simulation:
+   ```bash
+   python main.py
+   ```
 
-### Controls and tweaks
+### 🎮 Simulator Controls (Custom Pro Features)
 
-Instructions are displayed in the window's title.
+We have built a fully interactive custom UI overlay into the simulator. Once you run `main.py`, you can use these controls to set up the race:
 
-![title](readme-data/title1.png)
+* **[L-Click]**: Draw your custom track (or place the Start Point)
+* **[R-Click]**: Erase track (draw walls/grass)
+* **[UP / DOWN Arrows]**: Rapidly change the size of your drawing brush
+* **[SPACE]**: Lock in your track drawing and move to the Start phase
 
-You can also see the stats of the current generation in the title...
+Once the track is drawn and the AI starts running, you have access to powerful hotkeys:
+* **[F] Drop Finish Line**: Hover your mouse anywhere on the track and press `F` to drop the Red Bullseye Finish Line. The first car to touch it wins instantly!
+* **[S] Save Best Car**: If no finish line is set, you can press `S` to manually stop training early and save the smartest car's brain to `best_car.pkl`.
+* **[H] Hyper-Speed Mode**: Uncaps the Pygame framerate! This allows the AI generations to evolve and learn 10x faster so you don't have to wait.
+* **[V] Toggle Lasers**: Hides or shows the blue laser sensors on the cars for a cleaner visual look.
+* **[F5] Hard Restart**: Instantly wipes the track and restarts the program back to a blank canvas.
 
-![title2](readme-data/title2.png)
-
-...and the full stats inside the console.
-
-![cli_output](readme-data/cli_output.png)
-
-Feel free to tweak the parameters inside the `ai/config.txt` but also the static variables inside the `Car`, `CarAI` and `Engine` classes.
-For example, you can disable the rendering of the car's sensors by setting `DRAW_SENSORS` to `False` in the `Car` class.
+If a car wins or you press `S`, a Victory Screen will appear. Press **[P]** to watch a perfect playback of the winning car driving the track!
 
 ## ⚙️ How the AI works
 

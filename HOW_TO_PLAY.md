@@ -6,7 +6,7 @@ Here is exactly how to play, step-by-step:
 
 ### Step 1: Open the Game
 1. Open your terminal (like PowerShell).
-2. Type this to go to the game folder: `cd C:\Users\nshwe\Downloads\CAR`
+2. Type this to go to the game folder: `cd Path of ur folder wher the project is \CAR`
 3. Type this to start the game and hit Enter: `python main.py`
 
 ### Step 2: Draw Your Racetrack!

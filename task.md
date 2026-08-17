@@ -1,0 +1,11 @@
+- [x] Rewrite `engine.py` to support `pygame.RESIZABLE`.
+- [x] Add programmatic geometry generation for Level 1, 2, and 3 tracks.
+- [x] Implement floating text instructions that appear contextually in the viewport.
+- [x] Update engine to log generation data to `csv_data/training_rounds.csv`.
+- [x] Log champion stats to `csv_data/champion_car.csv` on win/save.
+- [x] Build in-game Data Viewer UI toggleable with `D` key.
+- [x] Add explicit step-by-step UI flow for finish line placement.
+- [ ] Create `levels/level_data.py` with 15 unique track layouts.
+- [ ] Refactor `engine.py` Main Menu into a 4x4 Grid system.
+- [ ] Refactor `engine.py` mouse click events to use the Grid system.
+- [ ] Refactor `generate_level()` to fetch data dynamically from `levels.py`.

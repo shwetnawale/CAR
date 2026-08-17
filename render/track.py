@@ -12,7 +12,7 @@ class Track:
         self.width = width
         self.height = height
         self.surface = pygame.Surface((width, height))
-        self.surface.fill(Color.WHITE)
+        self.surface.fill(Color.GRASS_COLOR)
         self.brush_size = 50
         self.last_position = None
 

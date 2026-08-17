@@ -60,7 +60,10 @@ class Engine:
         self.notification_text = ""
         self.notification_timer = 0
         self.abort_to_menu = False
+        self.ignore_drawing = False
+        self.current_level_id = 0
         os.makedirs("csv_data", exist_ok=True)
+        os.makedirs("saved_brains", exist_ok=True)
 
     def draw_main_menu(self):
         self.screen.fill(Color.BG_LIGHT)
@@ -76,8 +79,8 @@ class Engine:
         # Grid settings
         cols = 4
         rows = 4
-        btn_w = 240
-        btn_h = 45
+        btn_w = 320
+        btn_h = 50
         gap_x = 20
         gap_y = 15
         total_w = cols * btn_w + (cols - 1) * gap_x
@@ -124,6 +127,9 @@ class Engine:
 
     def generate_level(self, level):
         self.track.surface.fill(Color.GRASS_COLOR)
+        self.stop_early = False
+        self.global_best_fitness = 0
+        self.current_level_id = level
         
         def draw_track_path(pts, closed=False):
             pygame.draw.lines(self.track.surface, Color.TRACK_COLOR, closed, pts, 120)
@@ -321,9 +327,11 @@ class Engine:
                     home_rect = pygame.Rect(10, 100 if self.state == "ai_running" else 10, 120, 40)
                     if home_rect.collidepoint(mx, my):
                         self.abort_to_menu = True
+                        if self.state == "ai_running":
+                            raise StopTraining()
                         self.state = "main_menu"
                         self.track.surface.fill(Color.GRASS_COLOR)
-                        return
+                        return True
                             
             if event.type == pygame.VIDEORESIZE:
                 self.win_width, self.win_height = event.w, event.h
@@ -334,8 +342,8 @@ class Engine:
                     mx, my = pygame.mouse.get_pos()
                     
                     cols = 4
-                    btn_w = 240
-                    btn_h = 45
+                    btn_w = 320
+                    btn_h = 50
                     gap_x = 20
                     gap_y = 15
                     total_w = cols * btn_w + (cols - 1) * gap_x
@@ -353,16 +361,24 @@ class Engine:
                         if rect.collidepoint(mx, my):
                             if i == 0:
                                 self.state = "drawing_track"
+                                self.track.surface.fill(Color.GRASS_COLOR)
+                                self.ignore_drawing = True
+                                self.stop_early = False
+                                self.global_best_fitness = 0
+                                self.current_level_id = 0
                             else:
                                 self.generate_level(i)
                                 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_c:
                         try:
+                            if os.path.exists("saved_brains"):
+                                for f in os.listdir("saved_brains"):
+                                    os.remove(os.path.join("saved_brains", f))
                             if os.path.exists("best_car.pkl"): os.remove("best_car.pkl")
                             if os.path.exists("csv_data/training_rounds.csv"): os.remove("csv_data/training_rounds.csv")
                             if os.path.exists("csv_data/champion_car.csv"): os.remove("csv_data/champion_car.csv")
-                            self.notification_text = "Data Wiped Successfully!"
+                            self.notification_text = "Data & Brains Wiped!"
                             self.notification_timer = 180
                         except Exception:
                             pass
@@ -413,6 +429,11 @@ class Engine:
         return True
     
     def handle_drawing_track(self):
+        if self.ignore_drawing:
+            if not pygame.mouse.get_pressed()[0]:
+                self.ignore_drawing = False
+            return
+            
         v_mouse = self.get_viewport_mouse_pos()
         if pygame.mouse.get_pressed()[0]:
             self.track.draw(v_mouse, Color.TRACK_COLOR)
@@ -423,20 +444,30 @@ class Engine:
 
     def handle_placing_finish_line(self):
         v_mouse = self.get_viewport_mouse_pos()
-        if not pygame.mouse.get_pressed()[0]:
-            self.end_point_pos = list(v_mouse)
-        else:
+        self.end_point_pos = list(v_mouse)
+        
+        if self.ignore_drawing:
+            if not pygame.mouse.get_pressed()[0]:
+                self.ignore_drawing = False
+            return
+            
+        if pygame.mouse.get_pressed()[0]:
             self.state = "placing_start_point"
-            time.sleep(0.2) # Prevent click-through to next step
+            self.ignore_drawing = True
 
     def handle_placing_start_point(self):
         v_mouse = self.get_viewport_mouse_pos()
-        if not pygame.mouse.get_pressed()[0]:
-            self.car.position = [
-                v_mouse[0] - Car.CAR_SIZE_X / 2,
-                v_mouse[1] - Car.CAR_SIZE_Y / 2
-            ]
-        else:
+        self.car.position = [
+            v_mouse[0] - Car.CAR_SIZE_X / 2,
+            v_mouse[1] - Car.CAR_SIZE_Y / 2
+        ]
+        
+        if self.ignore_drawing:
+            if not pygame.mouse.get_pressed()[0]:
+                self.ignore_drawing = False
+            return
+            
+        if pygame.mouse.get_pressed()[0]:
             self.decided_car_pos = self.car.position.copy()
             self.state = "ai_running"
 
@@ -514,7 +545,9 @@ class Engine:
             return
 
         self.best_genome = best_genome
-        with open("best_car.pkl", "wb") as f:
+        
+        filename = "saved_brains/custom_track_temp.pkl" if self.current_level_id == 0 else f"saved_brains/level_{self.current_level_id}_brain.pkl"
+        with open(filename, "wb") as f:
             pickle.dump(best_genome, f)
         
         self.state = "training_finished"

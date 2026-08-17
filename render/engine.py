@@ -73,8 +73,12 @@ class Engine:
         title = font_title.render("NEURODRIVE", True, Color.TEXT_DARK)
         sub = font_sub.render("Neural Network Racing Simulation", True, Color.ACCENT_BLUE)
         
-        self.screen.blit(title, (self.win_width//2 - title.get_width()//2, self.win_height//4 - 50))
-        self.screen.blit(sub, (self.win_width//2 - sub.get_width()//2, self.win_height//4 + 10))
+        import time, math
+        float_offset = math.sin(time.time() * 3) * 10
+        title_y = self.win_height//4 - 70 + float_offset
+        
+        self.screen.blit(title, (self.win_width//2 - title.get_width()//2, title_y))
+        self.screen.blit(sub, (self.win_width//2 - sub.get_width()//2, title_y + title.get_height() - 10))
         
         # Grid settings
         cols = 4

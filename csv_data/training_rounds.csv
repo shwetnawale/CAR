@@ -1,0 +1,40 @@
+# NEURODRIVE AI TRAINING DATA SHEET
+# This sheet records how the AI improves over time.
+# Generation: The current round of evolution.
+# Best_Score: The furthest distance driven by the smartest car.
+# Surviving_Cars: How many cars were still alive when the round ended.
+# ---------------------------------------------------------
+Generation,Best_Score,Surviving_Cars
+3,180.36,1
+1,62.06,2
+1,0.77,0
+2,0.77,0
+3,0.77,0
+4,0.77,0
+5,0.77,0
+6,0.77,0
+7,0.77,0
+8,0.77,0
+9,0.77,0
+10,0.77,0
+11,0.77,0
+12,0.77,0
+13,0.77,0
+14,0.77,0
+15,0.77,0
+16,0.77,0
+17,0.77,0
+18,0.77,0
+19,0.77,0
+20,0.77,0
+21,0.77,0
+22,0.77,0
+23,0.77,0
+24,0.77,0
+25,0.77,0
+26,0.77,0
+1,55.25,0
+2,122.35,0
+3,122.35,0
+4,122.35,0
+5,153.52,3

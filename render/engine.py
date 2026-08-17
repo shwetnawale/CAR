@@ -376,9 +376,7 @@ class Engine:
                                 for f in os.listdir("saved_brains"):
                                     os.remove(os.path.join("saved_brains", f))
                             if os.path.exists("best_car.pkl"): os.remove("best_car.pkl")
-                            if os.path.exists("csv_data/training_rounds.csv"): os.remove("csv_data/training_rounds.csv")
-                            if os.path.exists("csv_data/champion_car.csv"): os.remove("csv_data/champion_car.csv")
-                            self.notification_text = "Data & Brains Wiped!"
+                            self.notification_text = "Brains Wiped! (CSV Preserved)"
                             self.notification_timer = 180
                         except Exception:
                             pass
@@ -517,15 +515,16 @@ class Engine:
             population.add_reporter(neat.StdOutReporter(True))
             population.add_reporter(neat.StatisticsReporter())
             
-        # Initialize the CSV Data Sheet with plain English instructions
-        with open("csv_data/training_rounds.csv", "w") as f:
-            f.write("# NEURODRIVE AI TRAINING DATA SHEET\n")
-            f.write("# This sheet records how the AI improves over time.\n")
-            f.write("# Generation: The current round of evolution.\n")
-            f.write("# Best_Score: The furthest distance driven by the smartest car.\n")
-            f.write("# Surviving_Cars: How many cars were still alive when the round ended.\n")
-            f.write("# ---------------------------------------------------------\n")
-            f.write("Generation,Best_Score,Surviving_Cars\n")
+        # Initialize the CSV Data Sheet only if it doesn't exist
+        if not os.path.exists("csv_data/training_rounds.csv"):
+            with open("csv_data/training_rounds.csv", "w") as f:
+                f.write("# NEURODRIVE AI TRAINING DATA SHEET\n")
+                f.write("# This sheet records how the AI improves over time.\n")
+                f.write("# Generation: The current round of evolution.\n")
+                f.write("# Best_Score: The furthest distance driven by the smartest car.\n")
+                f.write("# Surviving_Cars: How many cars were still alive when the round ended.\n")
+                f.write("# ---------------------------------------------------------\n")
+                f.write("Generation,Best_Score,Surviving_Cars\n")
 
         try:
             best_genome = population.run(self.run_simulation, self.max_simulations)
@@ -565,12 +564,10 @@ class Engine:
                     dist_to_finish = math.hypot(car.center[0] - self.end_point_pos[0], car.center[1] - self.end_point_pos[1])
                     if dist_to_finish <= 80:
                         self.stop_early = True
-                        car_ai.best_nn = car_ai.nns[idx]
+                        self.best_genome = genomes[idx][1]
 
             if self.stop_early:
-                if car_ai.best_nn:
-                    self.best_genome = car_ai.best_nn.genome
-                else:
+                if not self.best_genome:
                     self.best_genome = genomes[0][1]
                     
                 # Log to CSV before stopping
@@ -578,9 +575,11 @@ class Engine:
                     f.write(f"{car_ai.TOTAL_GENERATIONS},{round(car_ai.best_fitness, 2)},{car_ai.remaining_cars}\n")
                     
                 # Log Champion Car
-                with open("csv_data/champion_car.csv", "w") as f:
-                    f.write("# CHAMPION CAR STATS\n")
-                    f.write("Winning_Generation,Final_Distance_Score\n")
+                if not os.path.exists("csv_data/champion_car.csv"):
+                    with open("csv_data/champion_car.csv", "w") as f:
+                        f.write("# CHAMPION CAR STATS\n")
+                        f.write("Winning_Generation,Final_Distance_Score\n")
+                with open("csv_data/champion_car.csv", "a") as f:
                     f.write(f"{car_ai.TOTAL_GENERATIONS},{round(car_ai.best_fitness, 2)}\n")
                     
                 raise StopTraining()

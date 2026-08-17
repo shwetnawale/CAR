@@ -54,7 +54,8 @@ class Car:
 
         self.position = start_position.copy()
 
-        self.angle = Car.DEFAULT_ANGLE
+        import random
+        self.angle = random.randint(0, 360)
         self.speed = Car.DEFAULT_SPEED
 
         self.center = [

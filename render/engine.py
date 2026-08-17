@@ -128,6 +128,7 @@ class Engine:
     def generate_level(self, level):
         self.track.surface.fill(Color.GRASS_COLOR)
         self.stop_early = False
+        self.abort_to_menu = False
         self.global_best_fitness = 0
         self.current_level_id = level
         
@@ -364,6 +365,7 @@ class Engine:
                                 self.track.surface.fill(Color.GRASS_COLOR)
                                 self.ignore_drawing = True
                                 self.stop_early = False
+                                self.abort_to_menu = False
                                 self.global_best_fitness = 0
                                 self.current_level_id = 0
                             else:
@@ -484,18 +486,22 @@ class Engine:
             pygame.draw.circle(self.viewport, Color.WHITE, self.end_point_pos, 10)
         
         if self.state == "training_finished":
-            font = pygame.font.SysFont(self.DEFAULT_FONT, 36)
-            popup = pygame.Surface((650, 200))
+            font1 = pygame.font.SysFont(self.DEFAULT_FONT, 32)
+            font2 = pygame.font.SysFont(self.DEFAULT_FONT, 28)
+            
+            txt1 = font1.render("VICTORY! The AI reached the Finish Line.", True, Color.TEXT_DARK)
+            txt2 = font2.render("Press P to Playback the Winning Car", True, Color.ACCENT_BLUE)
+            
+            popup_w = max(txt1.get_width(), txt2.get_width()) + 80
+            popup_h = 200
+            popup = pygame.Surface((popup_w, popup_h))
             popup.fill(Color.PANEL_BG)
             pygame.draw.rect(popup, Color.ACCENT_MINT, popup.get_rect(), 4)
             
-            txt1 = font.render("VICTORY! The AI reached the Finish Line.", True, Color.TEXT_DARK)
-            txt2 = font.render("Press P to Playback the Winning Car", True, Color.ACCENT_BLUE)
+            popup.blit(txt1, (popup_w//2 - txt1.get_width()//2, 60))
+            popup.blit(txt2, (popup_w//2 - txt2.get_width()//2, 120))
             
-            popup.blit(txt1, (30, 50))
-            popup.blit(txt2, (60, 120))
-            
-            self.viewport.blit(popup, (self.VIEW_W//2 - 325, self.VIEW_H//2 - 100))
+            self.viewport.blit(popup, (self.VIEW_W//2 - popup_w//2, self.VIEW_H//2 - popup_h//2))
             
         self.draw_floating_ui()
         self.render_viewport_to_screen()

@@ -1,4 +1,4 @@
-# NeuroDrive: Final Presentation Guide
+# AI Smart Driving Simulation: Final Presentation Guide
 
 This guide is designed to help you present your project to your professor. It is broken down into exactly **what to do** on the screen, and **what to say** out loud.
 
@@ -7,7 +7,7 @@ This guide is designed to help you present your project to your professor. It is
 ## 1. The Introduction (The Hook)
 *Start your presentation strong by explaining what the professor is about to see.*
 
-* **What it is:** "Professor, this is **NeuroDrive**. It is a custom-built, physics-based Artificial Intelligence simulation where cars learn how to drive completely from scratch using Machine Learning."
+* **What it is:** "Professor, this is **AI Smart Driving Simulation**. It is a custom-built, physics-based Artificial Intelligence simulation where cars learn how to drive completely from scratch using Machine Learning."
 * **The Tech Stack (Language & Tools):**
   * **Language:** Python
   * **Graphics:** Pygame (used to build the entire engine and UI from scratch)

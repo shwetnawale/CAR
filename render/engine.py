@@ -70,8 +70,8 @@ class Engine:
         font_title = pygame.font.SysFont(self.DEFAULT_FONT, 72, bold=True)
         font_sub = pygame.font.SysFont(self.DEFAULT_FONT, 20, bold=True)
         
-        title = font_title.render("NEURODRIVE", True, Color.TEXT_DARK)
-        sub = font_sub.render("Neural Network Racing Simulation", True, Color.ACCENT_BLUE)
+        title = font_title.render("AI SMART DRIVING", True, Color.TEXT_DARK)
+        sub = font_sub.render("Simulation", True, Color.ACCENT_BLUE)
         
         import time, math
         float_offset = math.sin(time.time() * 3) * 10
